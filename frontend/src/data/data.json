@@ -1,0 +1,77 @@
+
+{
+
+  "ruang 1a": {
+    "name": "Ruang 1A",
+    "location": "Lantai 1",
+    "description": "Terletak di sebelah lobi.",
+    "keyword": ["lantai 1", "1A", "ruang 1A", "absensi", "diskusi", "dosen"],
+    "command": "1",
+    "image": "/1.webp"
+  },
+  "ruang 1b": {
+    "name": "Ruang 1B",
+    "location": "Lantai 1",
+    "description": "Terletak di depan tangga lantai 1.",
+    "keyword": ["lantai 1", "1B", "ruang 1B", "ruang prigel", "ruang tugas"],
+    "command": "2",
+    "image": "/images/ruang-rapat.jpg"
+  },
+  "ruang administrasi": {
+    "name": "Ruang Administrasi",
+    "location": "Lantai 1",
+    "description": "Terletak di sisi kanan ujung koridor, setelah melewati ruang 1B.",
+    "keyword": ["lantai 1", "administrasi", "berkas"],
+    "command": "3",
+    "image": "/images/perpustakaan.jpg"
+  },
+  "ruang rapat 1": {
+    "name": "Ruang Rapat 1",
+    "location": "Lantai 1",
+    "description": "Terletak di sisi kiri setelah tangga lantai 1 dan berada di depan ruang 1B.",
+    "keyword": ["lantai 1", "rapat", "ruang rapat 1"],
+    "command": "4",
+    "image": "/images/ruang-seminar.jpg"
+  },
+  "ruang humas": {
+    "name": "Ruang Humas",
+    "location": "Lantai 1",
+    "description": "Terletak di sisi kiri ujung koridor dan depan ruang administrasi.",
+    "keyword": ["lantai 1", "humas", "ruang humas", "undangan"],
+    "command": "5",
+    "image": "/images/lab-iot.jpg"
+  },
+  "toilet wanita": {
+    "name": "Toilet Wanita Lantai 1",
+    "location": "Lantai 1",
+    "description": "Terletak di belakang gedung, setelah ruang administrasi.",
+    "keyword": ["lantai 1", "toilet wanita", "toilet", "kamar mandi", "mck", "putri", "perempuan", "cewe"],
+    "command": "6",
+    "image": "/images/aula-utama.jpg"
+  },
+  "toilet pria": {
+    "name": "toilet Pria Lantai 1",
+    "location": "Lantai 1",
+    "description": "Terletak di belakang gedung, setelah ruang administrasi.",
+    "keyword": ["lantai 1", "toilet pria", "toilet", "kamar mandi", "mck", "putra","laki", "cowo"],
+    "command": "7",
+    "image": "/images/aula-a1.jpg"
+  }
+  ,"Lift 1": {
+    "name": "Lift lantai 1",
+    "location": "Lantai 1",
+    "description": "terletak didepan pintu masuk gedung",
+    "keyword": ["lantai 1", "lift lantai 1", "lift", "elevator", "naik"],
+    "command": "7",
+    "image": "/images/aula-a1.jpg"
+  },
+  "Tangga 1": {
+    "name": "Tangga lantai 1",
+    "location": "Lantai 1",
+    "description": "terletak disebelah kiri pintu masuk gedung",
+    "keyword": ["lantai 1", "tangga", "darurat", "evakuasi", "naik"],
+    "command": "7",
+    "image": "/images/aula-a1.jpg"
+  }
+
+}
