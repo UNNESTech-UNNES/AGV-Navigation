@@ -27,11 +27,7 @@ const page = () => {
         className="flex justify-center my-6 w-full"
       >
         <div className="w-[90%] xl:w-[80%] flex flex-col items-center gap-4">
-          <img
-            src="/qrcode.webp"
-            alt=""
-            className="w-[100%] xl:w-[25%]  mb-2"
-          />
+          <img src="/qrcode.webp" alt="" className="w-[35%] xl:w-[25%]  mb-2" />
           <p className="text-muted-foreground text-center">
             Pindai QR Code berikut untuk memberikan feedback Anda.
           </p>
