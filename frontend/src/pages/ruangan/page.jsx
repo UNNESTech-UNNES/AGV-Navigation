@@ -13,9 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 import { MapPin } from "lucide-react";
+import { toast } from "sonner";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("1");
+  const [espIp, setEspIp] = useState(
+    localStorage.getItem("espIp") || "192.168.18.146"
+  );
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -57,6 +61,7 @@ const Page = () => {
     description: language === "id" ? room.description : room.description_en,
     image: room.image,
     floor: room.location.match(/Lantai (\d+)/)?.[1] || "1",
+    command: room.command, // Ensure command is included
   }));
 
   const speak = (text) => {
@@ -67,6 +72,27 @@ const Page = () => {
     speech.lang = language === "id" ? "id-ID" : "en-US";
     speech.rate = 1;
     window.speechSynthesis.speak(speech);
+  };
+
+  const sendCommandToESP = async (command) => {
+    try {
+      const response = await fetch(`http://${espIp}/command`, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: command.toString(),
+      });
+
+      if (response.ok) {
+        console.log(`Perintah ${command} dikirim ke ESP32`);
+        // toast.success(`Command ${command} sent to ESP32 successfully.`);
+      } else {
+        console.error("Gagal mengirim perintah");
+        toast.error("Failed to send command to ESP32.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      toast.error("Error sending command to ESP32.");
+    }
   };
 
   const handleGuide = (room) => {
@@ -91,6 +117,7 @@ const Page = () => {
     setTimeout(() => {
       setLoading(false);
       setSelectedRoom(room);
+      sendCommandToESP(room.command); // Send command when guiding
     }, 4000);
   };
 
@@ -140,7 +167,7 @@ const Page = () => {
                       <RoomCard
                         key={room.id}
                         room={room}
-                        onGuide={() => handleGuide(room)}
+                        onGuide={() => handleGuide(room)} // Call handleGuide
                       />
                     ))}
                 </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sun, Moon, Menu, X } from "lucide-react";
 
 function Navbar() {
@@ -54,11 +54,8 @@ function Navbar() {
   ];
 
   return (
-    <motion.nav
-      initial={{ y: -100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 1, ease: "easeOut" }}
-      className={`fixed top-0 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[80%] bg-background/20 backdrop-blur-xs flex items-center justify-between xl:px-6 xl:py-4 px-4 py-2 z-10 border shadow-xs mt-5 rounded-full transition-all duration-300 ${
+    <nav
+      className={`fixed top-0 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[80%] bg-background/20 backdrop-blur-md flex items-center justify-between px-4 py-3 z-20 border mt-5 rounded-full transition-all duration-300 ${
         isScrolled ? "shadow-md" : "bg-muted-80"
       }`}
     >
@@ -66,6 +63,7 @@ function Navbar() {
         <img src="/logo-agv.png" alt="Logo" className="h-8 cursor-pointer" />
       </Link>
 
+      {/* Menu untuk Desktop */}
       <ul className="hidden md:flex gap-6">
         {menuItems.map((item) => (
           <li key={item.path}>
@@ -73,7 +71,7 @@ function Navbar() {
               to={item.path}
               className={`${
                 location.pathname === item.path
-                  ? "text-primary "
+                  ? "text-primary"
                   : "text-muted-foreground"
               } transition-colors`}
             >
@@ -83,6 +81,7 @@ function Navbar() {
         ))}
       </ul>
 
+      {/* Tombol untuk Theme & Language */}
       <div className="flex items-center gap-4">
         <button
           onClick={toggleTheme}
@@ -93,19 +92,48 @@ function Navbar() {
 
         <button
           onClick={toggleLanguage}
-          className="px-4 py-2  rounded-full bg-muted transition text-md"
+          className="px-4 py-2 rounded-full bg-muted transition text-md"
         >
           {language === "id" ? "ENG" : "IDN"}
         </button>
 
+        {/* Tombol untuk Menu Mobile */}
         <button
           className="md:hidden p-2 rounded-full bg-muted transition"
           onClick={() => setMenuOpen(!menuOpen)}
         >
-          {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
-    </motion.nav>
+
+      {/* Menu Mobile */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+            className="absolute top-20 left-0 w-full bg-background border rounded-md p-4 flex flex-col items-center md:hidden"
+          >
+            {menuItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`py-2 w-full text-center ${
+                  location.pathname === item.path
+                    ? "text-primary font-semibold"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </nav>
   );
 }
 

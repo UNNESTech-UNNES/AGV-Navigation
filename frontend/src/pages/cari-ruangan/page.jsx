@@ -259,11 +259,11 @@ const CariRuangan = ({ language }) => {
               {language === "id" ? selectedRoom?.name : selectedRoom?.name_en}
             </DialogTitle>
           </DialogHeader>
-          <img
+          {/* <img
             src={selectedRoom.image}
             alt={selectedRoom.name}
             className="w-full h-60 object-cover rounded-lg"
-          />
+          /> */}
           <p className="mt-4">
             {language === "id"
               ? selectedRoom?.description
