@@ -23,7 +23,7 @@ const Page = () => {
 
   const sendCommandToESP = async (command) => {
     try {
-      const response = await fetch("http://192.168.159.63/command", {
+      const response = await fetch("http://192.168.4.1/command", {
         method: "POST",
         headers: { "Content-Type": "text/plain" },
         body: command.toString(),

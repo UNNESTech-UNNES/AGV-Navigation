@@ -15,9 +15,9 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: "AGV Navigation",
-        short_name: "AGV Navigation",
-        description: "AGV Navigation  ",
+        name: "AGV",
+        short_name: "AGV ",
+        description: "AGV  ",
         theme_color: "#ffffff",
         background_color: "#ffffff",
         display: "standalone",
