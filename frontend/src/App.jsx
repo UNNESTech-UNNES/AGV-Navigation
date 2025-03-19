@@ -11,6 +11,7 @@ import NotFound from "./pages/404/page";
 import Navbar from "./components/navbar";
 import "@fontsource/manrope";
 import { GridBackgroundDemo } from "./components/GridDemo";
+import ESPControl from "./pages/esp/page";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/tentang" element={<Tentang />} />
           <Route path="/agv" element={<GridBackgroundDemo />} />
+          <Route path="/esp" element={<ESPControl />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>

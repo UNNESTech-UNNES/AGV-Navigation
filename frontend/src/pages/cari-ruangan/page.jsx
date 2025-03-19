@@ -27,7 +27,7 @@ const CariRuangan = () => {
 
   const sendCommandToESP = async (command) => {
     try {
-      const response = await fetch("http://192.168.4.1/command", {
+      const response = await fetch("http://192.168.18.146/command", {
         method: "POST",
         headers: { "Content-Type": "text/plain" },
         body: command.toString(),
