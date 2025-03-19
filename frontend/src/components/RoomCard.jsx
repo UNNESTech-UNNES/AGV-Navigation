@@ -2,8 +2,26 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { MapPin, FileText } from "lucide-react";
+import { useState, useEffect } from "react";
 
 const RoomCard = ({ room, onGuide }) => {
+  const [language, setLanguage] = useState(
+    localStorage.getItem("lang") || "id"
+  );
+
+  useEffect(() => {
+    const handleLangChange = () => {
+      setLanguage(localStorage.getItem("lang") || "id");
+    };
+    window.addEventListener("languageChange", handleLangChange);
+    return () => window.removeEventListener("languageChange", handleLangChange);
+  }, []);
+
+  const buttonText = {
+    id: "Antarkan ke Ruangan",
+    en: "Guide to Room",
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -25,7 +43,7 @@ const RoomCard = ({ room, onGuide }) => {
             <span className="font-medium">{room.description}</span>
           </p>
           <Button onClick={() => onGuide(room)} className="w-full mt-4">
-            Antarkan ke Ruangan
+            {buttonText[language]}
           </Button>
         </CardContent>
       </Card>

@@ -7,40 +7,50 @@ function Navbar() {
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
   const [menuOpen, setMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const location = useLocation(); // Dapatkan path saat ini
+  const [language, setLanguage] = useState(
+    localStorage.getItem("lang") || "id"
+  );
+  const location = useLocation();
 
   useEffect(() => {
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    document.documentElement.classList.toggle("dark", theme === "dark");
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleLangChange = () => {
+      setLanguage(localStorage.getItem("lang") || "id");
+    };
+    window.addEventListener("languageChange", handleLangChange);
+    return () => window.removeEventListener("languageChange", handleLangChange);
+  }, []);
 
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  // Deteksi scroll untuk mengubah background navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10); // Jika scroll lebih dari 10px, ubah background
-    };
+  const toggleLanguage = () => {
+    const newLang = language === "id" ? "en" : "id";
+    localStorage.setItem("lang", newLang);
+    setLanguage(newLang);
+    window.dispatchEvent(new Event("languageChange"));
+  };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  // Daftar menu
   const menuItems = [
-    { path: "/", label: "Beranda" },
-    { path: "/daftar-ruangan", label: "Daftar Ruangan" },
-    { path: "/denah", label: "Denah" },
-    { path: "/feedback", label: "Feedback" },
-    { path: "/tentang", label: "Tentang" },
+    { path: "/", label: language === "id" ? "Beranda" : "Home" },
+    {
+      path: "/daftar-ruangan",
+      label: language === "id" ? "Daftar Ruangan" : "Room List",
+    },
+    { path: "/denah", label: language === "id" ? "Denah" : "Map" },
+    { path: "/feedback", label: language === "id" ? "Ulasan" : "Feedback" },
+    { path: "/tentang", label: language === "id" ? "Tentang" : "About" },
   ];
 
   return (
@@ -48,16 +58,14 @@ function Navbar() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 1, ease: "easeOut" }}
-      className={`fixed top-0 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[80%] bg-background/20 backdrop-blur-xs    flex items-center justify-between xl:px-6 xl:py-4 px-4 py-2 z-10 border shadow-xs mt-5 rounded-full transition-all duration-300 ${
+      className={`fixed top-0 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[80%] bg-background/20 backdrop-blur-xs flex items-center justify-between xl:px-6 xl:py-4 px-4 py-2 z-10 border shadow-xs mt-5 rounded-full transition-all duration-300 ${
         isScrolled ? "shadow-md" : "bg-muted-80"
       }`}
     >
-      {/* Logo */}
-      <div>
-        <img src="/logo-agv.png" alt="Logo" class=" h-8" />
-      </div>
+      <Link to="/esp">
+        <img src="/logo-agv.png" alt="Logo" className="h-8 cursor-pointer" />
+      </Link>
 
-      {/* Menu Desktop */}
       <ul className="hidden md:flex gap-6">
         {menuItems.map((item) => (
           <li key={item.path}>
@@ -75,7 +83,6 @@ function Navbar() {
         ))}
       </ul>
 
-      {/* Toggle Dark Mode & Menu Button */}
       <div className="flex items-center gap-4">
         <button
           onClick={toggleTheme}
@@ -84,7 +91,13 @@ function Navbar() {
           {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
         </button>
 
-        {/* Hamburger Menu (Mobile) */}
+        <button
+          onClick={toggleLanguage}
+          className="px-4 py-2  rounded-full bg-muted transition text-md"
+        >
+          {language === "id" ? "ENG" : "IDN"}
+        </button>
+
         <button
           className="md:hidden p-2 rounded-full bg-muted transition"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -92,34 +105,6 @@ function Navbar() {
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="absolute top-[70px] left-0 w-full bg-background shadow-xs border rounded-lg p-5 md:hidden z-50"
-        >
-          <ul className="flex flex-col gap-4">
-            {menuItems.map((item) => (
-              <li key={item.path}>
-                <Link
-                  to={item.path}
-                  className={`${
-                    location.pathname === item.path
-                      ? "text-primary font-semibold"
-                      : "text-muted-foreground"
-                  } transition-colors`}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </motion.div>
-      )}
     </motion.nav>
   );
 }

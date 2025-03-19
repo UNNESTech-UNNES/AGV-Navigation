@@ -1,77 +1,101 @@
-
 {
-
-  "ruang 1a": {
+  "ruang_1a": {
     "name": "Ruang 1A",
     "location": "Lantai 1",
     "description": "Terletak di sebelah lobi.",
-    "keyword": ["lantai 1", "1A", "ruang 1A", "absensi", "diskusi", "dosen"],
+    "name_en": "Room 1A",
+    "location_en": "1st Floor",
+    "description_en": "Located next to the lobby.",
+    "keyword": ["lantai 1", "1a", "ruang 1a", "absensi", "diskusi", "dosen", "floor 1", "room 1a", "attendance", "discussion", "lecturer"],
     "command": "1",
     "image": "/1.webp"
   },
-  "ruang 1b": {
+  "ruang_1b": {
     "name": "Ruang 1B",
     "location": "Lantai 1",
     "description": "Terletak di depan tangga lantai 1.",
-    "keyword": ["lantai 1", "1B", "ruang 1B", "ruang prigel", "ruang tugas"],
+    "name_en": "Room 1B",
+    "location_en": "1st Floor",
+    "description_en": "Located in front of the 1st floor stairs.",
+    "keyword": ["lantai 1", "1b", "ruang 1b", "ruang prigel", "ruang tugas", "floor 1", "room 1b", "prigel room", "task room"],
     "command": "2",
     "image": "/images/ruang-rapat.jpg"
   },
-  "ruang administrasi": {
+  "ruang_administrasi": {
     "name": "Ruang Administrasi",
     "location": "Lantai 1",
     "description": "Terletak di sisi kanan ujung koridor, setelah melewati ruang 1B.",
-    "keyword": ["lantai 1", "administrasi", "berkas"],
+    "name_en": "Administration Room",
+    "location_en": "1st Floor",
+    "description_en": "Located at the right end of the corridor, past Room 1B.",
+    "keyword": ["lantai 1", "administrasi", "berkas", "floor 1", "administration", "documents"],
     "command": "3",
     "image": "/images/perpustakaan.jpg"
   },
-  "ruang rapat 1": {
+  "ruang_rapat_1": {
     "name": "Ruang Rapat 1",
     "location": "Lantai 1",
     "description": "Terletak di sisi kiri setelah tangga lantai 1 dan berada di depan ruang 1B.",
-    "keyword": ["lantai 1", "rapat", "ruang rapat 1"],
+    "name_en": "Meeting Room 1",
+    "location_en": "1st Floor",
+    "description_en": "Located on the left side after the 1st floor stairs, in front of Room 1B.",
+    "keyword": ["lantai 1", "rapat", "ruang rapat 1", "floor 1", "meeting", "meeting room 1"],
     "command": "4",
     "image": "/images/ruang-seminar.jpg"
   },
-  "ruang humas": {
+  "ruang_humas": {
     "name": "Ruang Humas",
     "location": "Lantai 1",
     "description": "Terletak di sisi kiri ujung koridor dan depan ruang administrasi.",
-    "keyword": ["lantai 1", "humas", "ruang humas", "undangan"],
+    "name_en": "Public Relations Room",
+    "location_en": "1st Floor",
+    "description_en": "Located at the left end of the corridor, in front of the administration room.",
+    "keyword": ["lantai 1", "humas", "ruang humas", "undangan", "floor 1", "public relations", "PR room", "invitation"],
     "command": "5",
     "image": "/images/lab-iot.jpg"
   },
-  "toilet wanita": {
+  "toilet_wanita": {
     "name": "Toilet Wanita Lantai 1",
     "location": "Lantai 1",
     "description": "Terletak di belakang gedung, setelah ruang administrasi.",
-    "keyword": ["lantai 1", "toilet wanita", "toilet", "kamar mandi", "mck", "putri", "perempuan", "cewe"],
+    "name_en": "Women's Restroom 1st Floor",
+    "location_en": "1st Floor",
+    "description_en": "Located at the back of the building, past the administration room.",
+    "keyword": ["lantai 1", "toilet wanita", "toilet", "kamar mandi", "mck", "putri", "perempuan", "cewe", "floor 1", "women's restroom", "toilet", "bathroom", "ladies", "female"],
     "command": "6",
     "image": "/images/aula-utama.jpg"
   },
-  "toilet pria": {
-    "name": "toilet Pria Lantai 1",
+  "toilet_pria": {
+    "name": "Toilet Pria Lantai 1",
     "location": "Lantai 1",
     "description": "Terletak di belakang gedung, setelah ruang administrasi.",
-    "keyword": ["lantai 1", "toilet pria", "toilet", "kamar mandi", "mck", "putra","laki", "cowo"],
-    "command": "7",
-    "image": "/images/aula-a1.jpg"
-  }
-  ,"Lift 1": {
-    "name": "Lift lantai 1",
-    "location": "Lantai 1",
-    "description": "terletak didepan pintu masuk gedung",
-    "keyword": ["lantai 1", "lift lantai 1", "lift", "elevator", "naik"],
+    "name_en": "Men's Restroom 1st Floor",
+    "location_en": "1st Floor",
+    "description_en": "Located at the back of the building, past the administration room.",
+    "keyword": ["lantai 1", "toilet pria", "toilet", "kamar mandi", "mck", "putra", "laki", "cowo", "floor 1", "men's restroom", "toilet", "bathroom", "male"],
     "command": "7",
     "image": "/images/aula-a1.jpg"
   },
-  "Tangga 1": {
-    "name": "Tangga lantai 1",
+  "lift_1": {
+    "name": "Lift Lantai 1",
     "location": "Lantai 1",
-    "description": "terletak disebelah kiri pintu masuk gedung",
-    "keyword": ["lantai 1", "tangga", "darurat", "evakuasi", "naik"],
-    "command": "7",
+    "description": "Terletak di depan pintu masuk gedung.",
+    "name_en": "Elevator 1st Floor",
+    "location_en": "1st Floor",
+    "description_en": "Located in front of the building entrance.",
+    "keyword": ["lantai 1", "lift lantai 1", "lift", "elevator", "naik", "floor 1", "elevator", "lift", "up"],
+    "command": "8",
+    "image": "/images/aula-a1.jpg"
+  },
+  "tangga_1": {
+    "name": "Tangga Lantai 1",
+    "location": "Lantai 1",
+    "description": "Terletak di sebelah kiri pintu masuk gedung.",
+    "name_en": "Stairs 1st Floor",
+    "location_en": "1st Floor",
+    "description_en": "Located to the left of the building entrance.",
+    "keyword": ["lantai 1", "tangga", "darurat", "evakuasi", "naik", "floor 1", "stairs", "emergency", "evacuation", "up"],
+    "command": "9",
     "image": "/images/aula-a1.jpg"
   }
-
 }

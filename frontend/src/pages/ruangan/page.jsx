@@ -1,5 +1,5 @@
-import Header from "@/components/header";
 import React, { useState, useEffect } from "react";
+import Header from "@/components/header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { Separator } from "@/components/ui/separator";
@@ -11,7 +11,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { MapPin } from "lucide-react";
 
@@ -20,28 +19,43 @@ const Page = () => {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [language, setLanguage] = useState(
+    localStorage.getItem("lang") || "id"
+  );
 
-  const sendCommandToESP = async (command) => {
-    try {
-      const response = await fetch("http://192.168.18.146/command", {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: command.toString(),
-      });
+  useEffect(() => {
+    const handleLangChange = () => {
+      setLanguage(localStorage.getItem("lang") || "id");
+    };
+    window.addEventListener("languageChange", handleLangChange);
+    return () => window.removeEventListener("languageChange", handleLangChange);
+  }, []);
 
-      if (response.ok) {
-        console.log(`Perintah ${command} dikirim ke ESP32`);
-      } else {
-        console.error("Gagal mengirim perintah");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  // Data teks dalam dua bahasa
+  const texts = {
+    id: {
+      title: "Daftar Ruangan",
+      description: "Cari dan temukan ruangan yang Anda cari",
+      guideMessage: (room) =>
+        `Baik, Anda akan saya antar ke ${room.name}. ${room.description}`,
+      guiding: "Menghantarkan Anda ke",
+    },
+    en: {
+      title: "Room List",
+      description: "Find and discover the room you are looking for",
+      guideMessage: (room) =>
+        `Alright, I will guide you to ${room.name}. ${room.description}`,
+      guiding: "Guiding you to",
+    },
   };
 
-  const roomsArray = Object.values(roomsData).map((room, index) => ({
-    id: index,
-    ...room,
+  // Konversi data JSON sesuai bahasa
+  const roomsArray = Object.entries(roomsData).map(([key, room], index) => ({
+    id: key,
+    name: language === "id" ? room.name : room.name_en,
+    location: language === "id" ? room.location : room.location_en,
+    description: language === "id" ? room.description : room.description_en,
+    image: room.image,
     floor: room.location.match(/Lantai (\d+)/)?.[1] || "1",
   }));
 
@@ -50,7 +64,7 @@ const Page = () => {
       window.speechSynthesis.cancel();
     }
     const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "id-ID";
+    speech.lang = language === "id" ? "id-ID" : "en-US";
     speech.rate = 1;
     window.speechSynthesis.speak(speech);
   };
@@ -58,11 +72,11 @@ const Page = () => {
   const handleGuide = (room) => {
     setLoading(true);
     setProgress(0);
-    speak(`Baik, Anda akan saya antar ke ${room.name}. ${room.description}`);
+    speak(texts[language].guideMessage(room));
 
-    let duration = 4000; // Total waktu dalam ms (4 detik)
-    let interval = 100; // Interval update dalam ms
-    let step = 100 / (duration / interval); // Hitung kenaikan per interval
+    let duration = 4000;
+    let interval = 100;
+    let step = 100 / (duration / interval);
 
     let progressInterval = setInterval(() => {
       setProgress((prev) => {
@@ -77,14 +91,14 @@ const Page = () => {
     setTimeout(() => {
       setLoading(false);
       setSelectedRoom(room);
-    }, 4000); // Simulasi loading selesai dalam 4 detik
+    }, 4000);
   };
 
   return (
     <div className="flex flex-col items-center">
       <Header
-        title="Daftar Ruangan"
-        description="Cari dan temukan ruangan yang anda cari"
+        title={texts[language].title}
+        description={texts[language].description}
         variant="secondary"
       />
 
@@ -111,7 +125,7 @@ const Page = () => {
           <TabsList className="flex items-center max-w-xs mx-auto gap-2">
             {["1", "2", "3", "4"].map((floor) => (
               <TabsTrigger key={floor} value={floor}>
-                Lantai {floor}
+                {language === "id" ? `Lantai ${floor}` : `Floor ${floor}`}
               </TabsTrigger>
             ))}
           </TabsList>
@@ -126,10 +140,7 @@ const Page = () => {
                       <RoomCard
                         key={room.id}
                         room={room}
-                        onGuide={() => {
-                          sendCommandToESP(room.command);
-                          handleGuide(room);
-                        }}
+                        onGuide={() => handleGuide(room)}
                       />
                     ))}
                 </div>
@@ -165,10 +176,10 @@ const Page = () => {
 
       {/* Loading Overlay dengan Progress Bar */}
       {loading && (
-        <div className="fixed inset-0 flex items-center bg-primary-foreground/50 justify-center z-50 ">
+        <div className="fixed inset-0 flex items-center bg-primary-foreground/50 justify-center z-50">
           <div className="bg-muted p-6 rounded-lg shadow-lg w-80 text-center">
             <h2 className="text-lg font-semibold">
-              Menghantarkan Anda ke {selectedRoom?.name}...
+              {texts[language].guiding} {selectedRoom?.name}...
             </h2>
             <div className="mt-4">
               <Progress value={progress} />

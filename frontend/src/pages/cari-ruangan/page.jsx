@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
 import { motion } from "framer-motion";
-import roomsData from "@/data/data.json";
+import roomsData from "@/data/data.json"; // Ensure this path is correct
 import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
 import { Separator } from "@/components/ui/separator";
@@ -14,7 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { Progress } from "@/components/ui/progress";
 
-const CariRuangan = () => {
+const CariRuangan = ({ language }) => {
+  const [espIp, setEspIp] = useState(
+    localStorage.getItem("espIp") || "192.168.18.146"
+  );
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [roomResults, setRoomResults] = useState([]);
@@ -25,9 +28,34 @@ const CariRuangan = () => {
   const [showRoomDialog, setShowRoomDialog] = useState(false);
   const recognitionRef = useRef(null);
 
+  // Texts for different languages
+  const texts = {
+    id: {
+      title: "Cari Ruangan",
+      description: "Tekan tombol dan ucapkan nama ruangan yang anda cari",
+      notFound: "Maaf, ruangan tidak ditemukan.",
+      welcome: "Selamat datang, ruangan apa yang sedang Anda cari hari ini?",
+      foundRooms: (count, rooms) => `Ditemukan ${count} ruangan: ${rooms}`,
+      guiding: (room) =>
+        `Baik, Anda akan saya antar ke ${room.name}. ${room.description}`,
+      guide: "Mengantar Anda",
+    },
+    en: {
+      title: "Find Room",
+      description:
+        "Press the button and say the name of the room you are looking for",
+      notFound: "Sorry, room not found.",
+      welcome: "Welcome, what room are you looking for today?",
+      foundRooms: (count, rooms) => `Found ${count} rooms: ${rooms}`,
+      guiding: (room) =>
+        `Alright, I will guide you to ${room.name_en}. ${room.description_en}`,
+      guide: "Guiding you ",
+    },
+  };
+
   const sendCommandToESP = async (command) => {
     try {
-      const response = await fetch("http://192.168.18.146/command", {
+      const response = await fetch(`http://${espIp}/command`, {
         method: "POST",
         headers: { "Content-Type": "text/plain" },
         body: command.toString(),
@@ -48,7 +76,7 @@ const CariRuangan = () => {
       window.speechSynthesis.cancel();
     }
     const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = "id-ID";
+    speech.lang = language === "id" ? "id-ID" : "en-US";
     speech.rate = 1;
     window.speechSynthesis.speak(speech);
   };
@@ -57,7 +85,7 @@ const CariRuangan = () => {
     setSelectedRoom(room);
     setShowDialog(true);
     setProgress(0);
-    speak(`Baik, Anda akan saya antar ke ${room.name}. ${room.description}`);
+    speak(texts[language].guiding(room));
 
     let interval = setInterval(() => {
       setProgress((prev) => {
@@ -67,21 +95,22 @@ const CariRuangan = () => {
           setShowRoomDialog(true);
           return 100;
         }
-        return prev + 25; // Naik 25% setiap 400ms (4 langkah)
+        return prev + 25;
       });
-    }, 400); // Interval 400ms, total 4 detik
+    }, 400);
   };
 
   useEffect(() => {
     if (!sessionStorage.getItem("welcomeSpoken")) {
-      speak("Selamat datang, ruangan apa yang sedang Anda cari hari ini?");
+      speak(texts[language].welcome);
+      sessionStorage.setItem("welcomeSpoken", "true");
     }
 
     if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
       const SpeechRecognition =
         window.SpeechRecognition || window.webkitSpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.lang = "id-ID";
+      recognitionRef.current.lang = language === "id" ? "id-ID" : "en-US";
       recognitionRef.current.continuous = false;
       recognitionRef.current.interimResults = false;
 
@@ -91,30 +120,35 @@ const CariRuangan = () => {
         const text = event.results[0][0].transcript.toLowerCase();
         setTranscript(text);
 
-        const foundRooms = Object.values(roomsData).filter(
-          (room) =>
-            text.includes(room.name.toLowerCase()) ||
+        const foundRooms = Object.values(roomsData).filter((room) => {
+          const roomName = language === "id" ? room.name : room.name_en;
+          return (
+            text.includes(roomName.toLowerCase()) ||
             (room.keyword && room.keyword.some((kw) => text.includes(kw)))
-        );
+          );
+        });
 
         if (foundRooms.length > 0) {
-          setRoomResults(foundRooms.slice(0, 3));
+          setRoomResults(foundRooms.slice(0, 10));
           setNotFound(false);
           speak(
-            `Ditemukan ${foundRooms.length} ruangan: ${foundRooms
-              .map((room) => room.name)
-              .join(", ")}`
+            texts[language].foundRooms(
+              foundRooms.length,
+              foundRooms
+                .map((room) => (language === "id" ? room.name : room.name_en))
+                .join(", ")
+            )
           );
         } else {
           setRoomResults([]);
           setNotFound(true);
-          speak("Maaf, ruangan tidak ditemukan.");
+          speak(texts[language].notFound);
         }
       };
     } else {
       alert("Browser Anda tidak mendukung fitur pengenalan suara.");
     }
-  }, []);
+  }, [language]);
 
   const startListening = () => {
     if (recognitionRef.current) {
@@ -123,11 +157,16 @@ const CariRuangan = () => {
     }
   };
 
+  const handleIpChange = (e) => {
+    setEspIp(e.target.value);
+    localStorage.setItem("espIp", e.target.value);
+  };
+
   return (
     <div className="flex flex-col items-center">
       <Header
-        title="Cari Ruangan"
-        description="Tekan tombol dan ucapkan nama ruangan yang anda cari"
+        title={texts[language].title}
+        description={texts[language].description}
         variant="secondary"
       />
       <motion.div
@@ -145,68 +184,44 @@ const CariRuangan = () => {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 1, delay: 1, ease: "easeOut" }}
       >
-        {/* Glow Border Effect */}
-        {isListening && (
-          <motion.div
-            className="fixed inset-0 z-[-1] pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle at bottom, var(--tw-gradient-from) 20%, rgba(0,0,0,0) 80%)",
-            }}
-            initial={{ opacity: 0 }}
-            animate={{
-              opacity: 1,
-              background: [
-                "radial-gradient(circle at bottom, #0894FF 20%, rgba(0,0,0,0) 80%)",
-                "radial-gradient(circle at bottom, #C959DD 20%, rgba(0,0,0,0) 80%)",
-                "radial-gradient(circle at bottom, #FF2E54 20%, rgba(0,0,0,0) 80%)",
-                "radial-gradient(circle at bottom, #FF9004 20%, rgba(0,0,0,0) 80%)",
-                "radial-gradient(circle at bottom, #FF2E54 20%, rgba(0,0,0,0) 80%)",
-                "radial-gradient(circle at bottom, #C959DD 20%, rgba(0,0,0,0) 80%)",
-                "radial-gradient(circle at bottom, #0894FF 20%, rgba(0,0,0,0) 80%)",
-              ],
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          />
-        )}
-
-        {/* Button */}
         <Button className="relative">
-          {isListening ? "Mendengarkan..." : "Cari dengan Suara"}
+          {isListening
+            ? language === "id"
+              ? "Mendengarkan..."
+              : "Listening..."
+            : language === "id"
+            ? "Cari dengan Suara"
+            : "Search by Voice"}
         </Button>
       </motion.button>
 
       {transcript && (
         <motion.p className="mt-4 text-sm text-muted-foreground">
-          Anda mencari: "{transcript}"
+          {language === "id"
+            ? `Anda mencari: "${transcript}"`
+            : `You are searching for: "${transcript}"`}
         </motion.p>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-6 w-[90%] xl:w-[80%]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 my-6 w-[90%] xl:w-[80%] ">
         {roomResults.map((room, index) => (
           <motion.div key={index} className="w-full max-w-sm">
             <Card className="rounded-lg overflow-hidden">
               <CardHeader>
                 <CardTitle className="text-xl font-semibold text-left text-primary">
-                  {room.name}
+                  {language === "id" ? room.name : room.name_en}
                 </CardTitle>
               </CardHeader>
               <CardContent className="text-muted-foreground">
                 <p className="flex items-center gap-2 ">
                   <MapPin className="w-5 h-5" />
-                  <span className="font-medium">{room.location}</span>
+                  <span className="font-medium">
+                    {language === "id" ? room.location : room.location_en}
+                  </span>
                 </p>
-                {room.description && (
-                  <p className="flex items-center gap-2 mt-2">
-                    <span className="font-medium text-left">
-                      {room.description}
-                    </span>
-                  </p>
-                )}
+                <p className="text-muted-foreground">
+                  {language === "id" ? room.description : room.description_en}
+                </p>
                 <Button
                   className="mt-4 w-full"
                   onClick={() => {
@@ -214,7 +229,7 @@ const CariRuangan = () => {
                     sendCommandToESP(room.command);
                   }}
                 >
-                  Antarkan Saya
+                  {language === "id" ? "Antarkan Saya" : "Take Me There"}
                 </Button>
               </CardContent>
             </Card>
@@ -222,39 +237,43 @@ const CariRuangan = () => {
         ))}
       </div>
 
-      {notFound && (
-        <motion.div className="mt-6 p-6 text-red-600 dark:text-red-400 rounded-lg ">
-          Maaf, ruangan tidak ditemukan. Silakan coba lagi.
-        </motion.div>
-      )}
-
       {showDialog && (
-        <div className="fixed inset-0 flex items-center bg-primary-foreground/50 justify-center z-50 ">
-          <div className="bg-muted p-6 rounded-lg shadow-lg w-80 text-center">
-            <h2 className="text-lg font-semibold">
-              Menghantarkan Anda ke {selectedRoom?.name}...
-            </h2>
-            <div className="mt-4">
-              <Progress value={progress} />
-            </div>
-          </div>
-        </div>
+        <Dialog open={showDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>
+                <h2 className="text-lg font-semibold">
+                  {texts[language].guide} {selectedRoom?.name} ...
+                </h2>
+              </DialogTitle>
+            </DialogHeader>
+            <Progress value={progress} />
+          </DialogContent>
+        </Dialog>
       )}
 
-      {/* Dialog untuk Menampilkan Detail Ruangan */}
       <Dialog open={showRoomDialog} onOpenChange={setShowRoomDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{selectedRoom?.name}</DialogTitle>
+            <DialogTitle>
+              {language === "id" ? selectedRoom?.name : selectedRoom?.name_en}
+            </DialogTitle>
           </DialogHeader>
           <img
-            src={selectedRoom?.image}
-            alt={selectedRoom?.name}
-            className="w-full h-48 object-cover rounded-md"
+            src={selectedRoom.image}
+            alt={selectedRoom.name}
+            className="w-full h-60 object-cover rounded-lg"
           />
-          <p className="mt-4">{selectedRoom?.description}</p>
-          <p className="text-muted-foreground">
-            Lokasi: {selectedRoom?.location}
+          <p className="mt-4">
+            {language === "id"
+              ? selectedRoom?.description
+              : selectedRoom?.description_en}
+          </p>
+          <p className="text-muted-foreground flex gap-2 items-center">
+            <MapPin className="h-5" />{" "}
+            {language === "id"
+              ? selectedRoom?.location
+              : selectedRoom?.location_en}
           </p>
         </DialogContent>
       </Dialog>

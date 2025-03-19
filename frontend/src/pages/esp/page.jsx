@@ -1,60 +1,60 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
+import { toast } from "sonner";
 
-const ESPControl = () => {
-  const [ipAddress, setIpAddress] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+const ESPSettings = () => {
+  const [ipAddress, setIpAddress] = useState(
+    localStorage.getItem("espIp") || "192.168.18.146"
+  );
 
   useEffect(() => {
-    // Ambil IP dari localStorage saat komponen dimuat
-    const savedIP = localStorage.getItem("esp_ip") || "192.168.4.1";
-    setIpAddress(savedIP);
+    setIpAddress(localStorage.getItem("espIp") || "192.168.18.146");
   }, []);
 
-  const handleSaveIP = () => {
-    localStorage.setItem("esp_ip", ipAddress);
-    alert(`IP ESP32 disimpan: ${ipAddress}`);
+  const validateIp = (ip) => {
+    const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+    return ipRegex.test(ip);
   };
 
-  const handleTestESP = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`http://${ipAddress}/test`, {
-        method: "GET",
-      });
-      if (!response.ok) throw new Error("Gagal menghubungi ESP32");
-      alert("Perintah berhasil dikirim ke ESP32!");
-    } catch (error) {
-      alert("Gagal mengirim perintah. Periksa koneksi dan IP ESP32.");
+  const handleSave = () => {
+    if (validateIp(ipAddress)) {
+      localStorage.setItem("espIp", ipAddress);
+      toast.success("Alamat IP ESP32 berhasil diperbarui.");
+    } else {
+      toast.error(
+        "Format alamat IP tidak valid. Mohon masukkan IP yang benar."
+      );
     }
-    setIsLoading(false);
   };
 
   return (
-    <div className="max-w-md mx-auto ">
+    <div className="flex flex-col items-center min-h-screen p-4">
       <Header
-        title="Cari Ruangan"
-        description="Tekan tombol dan ucapkan nama ruangan yang anda cari"
+        title="Pengaturan ESP32"
+        description="Atur alamat IP ESP32 untuk komunikasi"
         variant="secondary"
       />
-      <h2 className="text-xl font-bold mt-4">ESP32 Control</h2>
-      <label className="block mb-2">IP Address ESP32:</label>
-      <Input
-        type="text"
-        value={ipAddress}
-        onChange={(e) => setIpAddress(e.target.value)}
-        className="mb-4"
-      />
-      <Button onClick={handleSaveIP} className="w-full mb-2">
-        Simpan IP
-      </Button>
-      <Button onClick={handleTestESP} className="w-full" disabled={isLoading}>
-        {isLoading ? "Mengirim..." : "Testing"}
-      </Button>
+
+      <div className="w-full max-w-lg  rounded-lg p-4 md:p-6 mt-6">
+        <div className="space-y-2">
+          <label className="block text-sm font-medium">Alamat IP ESP32</label>
+          <Input
+            type="text"
+            value={ipAddress}
+            onChange={(e) => setIpAddress(e.target.value)}
+            placeholder="192.168.x.x"
+            className="w-full"
+            aria-label="Alamat IP ESP32"
+          />
+          <Button onClick={handleSave} className="w-full md:w-auto mt-4">
+            Simpan
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default ESPControl;
+export default ESPSettings;
