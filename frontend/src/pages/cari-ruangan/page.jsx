@@ -242,7 +242,7 @@ const CariRuangan = ({ language }) => {
                     sendCommandToESP(room.command);
                   }}
                 >
-                  {language === "id" ? "Antarkan Saya" : "Guide ke Ruangan"}
+                  {language === "id" ? "Antarkan ke Ruangan" : "Guide to Room"}
                 </Button>
               </CardContent>
             </Card>
