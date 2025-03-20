@@ -38,7 +38,7 @@ const CariRuangan = ({ language }) => {
       foundRooms: (count, rooms) => `Ditemukan ${count} ruangan: ${rooms}`,
       guiding: (room) =>
         `Baik, Anda akan saya antar ke ${room.name}. ${room.description}`,
-      guide: "Mengantar Anda",
+      guide: "Mengantarkan Anda ...",
     },
     en: {
       title: "Find Room",
@@ -49,7 +49,7 @@ const CariRuangan = ({ language }) => {
       foundRooms: (count, rooms) => `Found ${count} rooms: ${rooms}`,
       guiding: (room) =>
         `Alright, I will guide you to ${room.name_en}. ${room.description_en}`,
-      guide: "Guiding you ",
+      guide: "Guiding you ...",
     },
   };
 
@@ -101,53 +101,66 @@ const CariRuangan = ({ language }) => {
   };
 
   useEffect(() => {
-    if (!sessionStorage.getItem("welcomeSpoken")) {
-      speak(texts[language].welcome);
-      sessionStorage.setItem("welcomeSpoken", "true");
-    }
+    // Selalu berbunyi setiap kali halaman dibuka
+    speak(texts[language].welcome);
 
-    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.lang = language === "id" ? "id-ID" : "en-US";
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = false;
-
-      recognitionRef.current.onstart = () => setIsListening(true);
-      recognitionRef.current.onend = () => setIsListening(false);
-      recognitionRef.current.onresult = (event) => {
-        const text = event.results[0][0].transcript.toLowerCase();
-        setTranscript(text);
-
-        const foundRooms = Object.values(roomsData).filter((room) => {
-          const roomName = language === "id" ? room.name : room.name_en;
-          return (
-            text.includes(roomName.toLowerCase()) ||
-            (room.keyword && room.keyword.some((kw) => text.includes(kw)))
-          );
-        });
-
-        if (foundRooms.length > 0) {
-          setRoomResults(foundRooms.slice(0, 10));
-          setNotFound(false);
-          speak(
-            texts[language].foundRooms(
-              foundRooms.length,
-              foundRooms
-                .map((room) => (language === "id" ? room.name : room.name_en))
-                .join(", ")
-            )
-          );
-        } else {
-          setRoomResults([]);
-          setNotFound(true);
-          speak(texts[language].notFound);
-        }
-      };
-    } else {
+    // Periksa apakah browser mendukung SpeechRecognition
+    if (
+      !("webkitSpeechRecognition" in window || "SpeechRecognition" in window)
+    ) {
       alert("Browser Anda tidak mendukung fitur pengenalan suara.");
+      return;
     }
+
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    // Set konfigurasi recognition
+    recognition.lang = language === "id" ? "id-ID" : "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    // Event handler
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    recognition.onresult = (event) => {
+      const text = event.results[0][0].transcript.toLowerCase();
+      setTranscript(text);
+
+      const foundRooms = Object.values(roomsData).filter((room) => {
+        const roomName = language === "id" ? room.name : room.name_en;
+        return (
+          text.includes(roomName.toLowerCase()) ||
+          (room.keyword && room.keyword.some((kw) => text.includes(kw)))
+        );
+      });
+
+      if (foundRooms.length > 0) {
+        setRoomResults(foundRooms.slice(0, 10));
+        setNotFound(false);
+        speak(
+          texts[language].foundRooms(
+            foundRooms.length,
+            foundRooms
+              .map((room) => (language === "id" ? room.name : room.name_en))
+              .join(", ")
+          )
+        );
+      } else {
+        setRoomResults([]);
+        setNotFound(true);
+        speak(texts[language].notFound);
+      }
+    };
+
+    // Simpan instance recognition ke dalam ref
+    recognitionRef.current = recognition;
+
+    return () => {
+      // Cleanup: Hentikan recognition jika komponen di-unmount
+      recognition.stop();
+    };
   }, [language]);
 
   const startListening = () => {
@@ -229,7 +242,7 @@ const CariRuangan = ({ language }) => {
                     sendCommandToESP(room.command);
                   }}
                 >
-                  {language === "id" ? "Antarkan Saya" : "Take Me There"}
+                  {language === "id" ? "Antarkan Saya" : "Guide ke Ruangan"}
                 </Button>
               </CardContent>
             </Card>
@@ -238,18 +251,14 @@ const CariRuangan = ({ language }) => {
       </div>
 
       {showDialog && (
-        <Dialog open={showDialog}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                <h2 className="text-lg font-semibold">
-                  {texts[language].guide} {selectedRoom?.name} ...
-                </h2>
-              </DialogTitle>
-            </DialogHeader>
-            <Progress value={progress} />
-          </DialogContent>
-        </Dialog>
+        <div className="fixed inset-0 flex items-center justify-center bg-primary-foreground/50 z-50">
+          <div className="bg-muted p-6 rounded-lg shadow-lg w-80 text-center">
+            <h2 className="text-lg font-semibold">{texts[language].guide}</h2>
+            <div className="mt-4">
+              <Progress value={progress} />
+            </div>
+          </div>
+        </div>
       )}
 
       <Dialog open={showRoomDialog} onOpenChange={setShowRoomDialog}>
@@ -259,11 +268,11 @@ const CariRuangan = ({ language }) => {
               {language === "id" ? selectedRoom?.name : selectedRoom?.name_en}
             </DialogTitle>
           </DialogHeader>
-          {/* <img
-            src={selectedRoom.image}
-            alt={selectedRoom.name}
+          <img
+            src={selectedRoom?.image}
+            alt={selectedRoom?.name}
             className="w-full h-60 object-cover rounded-lg"
-          /> */}
+          />
           <p className="mt-4">
             {language === "id"
               ? selectedRoom?.description

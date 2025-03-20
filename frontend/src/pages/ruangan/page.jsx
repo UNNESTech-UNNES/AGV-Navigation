@@ -42,14 +42,14 @@ const Page = () => {
       description: "Cari dan temukan ruangan yang Anda cari",
       guideMessage: (room) =>
         `Baik, Anda akan saya antar ke ${room.name}. ${room.description}`,
-      guiding: "Menghantarkan Anda ke",
+      guiding: "Menghantarkan Anda",
     },
     en: {
       title: "Room List",
       description: "Find and discover the room you are looking for",
       guideMessage: (room) =>
         `Alright, I will guide you to ${room.name}. ${room.description}`,
-      guiding: "Guiding you to",
+      guiding: "Guiding you",
     },
   };
 

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/header";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { Separator } from "@radix-ui/react-separator";
 
 const ESPSettings = ({ language }) => {
   // Accept language as a prop
@@ -47,9 +49,15 @@ const ESPSettings = ({ language }) => {
         }
         variant="secondary"
       />
-
+      <motion.div
+        initial={{ width: 0, opacity: 0 }}
+        animate={{ width: "100%", opacity: 1 }}
+        transition={{ duration: 3, delay: 0.6, ease: "easeOut" }}
+      >
+        <Separator className="my-4" />
+      </motion.div>
       <div className="w-full max-w-lg rounded-lg p-4 md:p-6 mt-6">
-        <div className="space-y-2">
+        <div className="space-y-1">
           <label className="block text-sm font-medium">
             {language === "id" ? "Alamat IP ESP32" : "ESP32 IP Address"}
           </label>
@@ -63,9 +71,11 @@ const ESPSettings = ({ language }) => {
               language === "id" ? "Alamat IP ESP32" : "ESP32 IP Address"
             }
           />
-          <Button onClick={handleSave} className="w-full md:w-auto mt-4">
-            {language === "id" ? "Simpan" : "Save"}
-          </Button>
+          <div className="flex justify-end">
+            <Button onClick={handleSave} className="w-full md:w-auto ">
+              {language === "id" ? "Simpan" : "Save"}
+            </Button>
+          </div>
         </div>
       </div>
     </div>
