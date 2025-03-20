@@ -8,7 +8,7 @@
     "description_en": "Located next to the lobby.",
     "keyword": ["lantai 1", "1a", "ruang 1a", "absensi", "diskusi", "dosen", "floor 1", "room 1a", "attendance", "discussion", "lecturer"],
     "command": "1",
-    "image": "/1.webp"
+    "image": "/ruangan/ruang1a.jpeg"
   },
   "ruang_1b": {
     "name": "Ruang 1B",
@@ -19,7 +19,7 @@
     "description_en": "Located in front of the 1st floor stairs.",
     "keyword": ["lantai 1", "1b", "ruang 1b", "ruang prigel", "ruang tugas", "floor 1", "room 1b", "prigel room", "task room"],
     "command": "2",
-    "image": "/images/ruang-rapat.jpg"
+    "image": "/ruangan/ruang1b.jpeg"
   },
   "ruang_administrasi": {
     "name": "Ruang Administrasi",
@@ -30,7 +30,7 @@
     "description_en": "Located at the right end of the corridor, past Room 1B.",
     "keyword": ["lantai 1", "administrasi", "berkas", "floor 1", "administration", "documents"],
     "command": "3",
-    "image": "/images/perpustakaan.jpg"
+    "image": "/ruangan/ruangadministrasi.jpeg"
   },
   "ruang_rapat_1": {
     "name": "Ruang Rapat 1",
@@ -41,7 +41,7 @@
     "description_en": "Located on the left side after the 1st floor stairs, in front of Room 1B.",
     "keyword": ["lantai 1", "rapat", "ruang rapat 1", "floor 1", "meeting", "meeting room 1"],
     "command": "4",
-    "image": "/images/ruang-seminar.jpg"
+    "image": "/ruangan/ruangrapat1.jpeg"
   },
   "ruang_humas": {
     "name": "Ruang Humas",
@@ -52,7 +52,7 @@
     "description_en": "Located at the left end of the corridor, in front of the administration room.",
     "keyword": ["lantai 1", "humas", "ruang humas", "undangan", "floor 1", "public relations", "PR room", "invitation"],
     "command": "5",
-    "image": "/images/lab-iot.jpg"
+    "image": "/ruangan/ruanghumas.jpeg"
   },
   "toilet_wanita": {
     "name": "Toilet Wanita Lantai 1",
@@ -63,7 +63,7 @@
     "description_en": "Located at the back of the building, past the administration room.",
     "keyword": ["lantai 1", "toilet wanita", "toilet", "kamar mandi", "mck", "putri", "perempuan", "cewe", "floor 1", "women's restroom", "toilet", "bathroom", "ladies", "female"],
     "command": "6",
-    "image": "/images/aula-utama.jpg"
+    "image": "/ruangan/toiletwanita.jpeg"
   },
   "toilet_pria": {
     "name": "Toilet Pria Lantai 1",
@@ -74,7 +74,7 @@
     "description_en": "Located at the back of the building, past the administration room.",
     "keyword": ["lantai 1", "toilet pria", "toilet", "kamar mandi", "mck", "putra", "laki", "cowo", "floor 1", "men's restroom", "toilet", "bathroom", "male"],
     "command": "7",
-    "image": "/images/aula-a1.jpg"
+    "image": "/ruangan/toiletpria.jpeg"
   },
   "lift_1": {
     "name": "Lift Lantai 1",
@@ -97,5 +97,126 @@
     "keyword": ["lantai 1", "tangga", "darurat", "evakuasi", "naik", "floor 1", "stairs", "emergency", "evacuation", "up"],
     "command": "9",
     "image": "/images/aula-a1.jpg"
+  },"ruang_2a": {
+    "name": "Ruang 2A",
+    "location": "Lantai 2",
+    "description": "lorem ipsum",
+    "name_en": "Room 2A",
+    "location_en": "2nd Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 2", "floor 2"],
+    "command": "10",
+    "image": "/ruangan/ruang2a.jpeg"
+  },
+  "ruang_2b": {
+    "name": "Ruang 2B",
+    "location": "Lantai 2",
+    "description": "lorem ipsum",
+    "name_en": "Room 2B",
+    "location_en": "2nd Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 2", "floor 2"],
+    "command": "11",
+    "image": "/ruangan/ruang2b.jpeg"
+  },
+  "ruang_kantor1": {
+    "name": "Ruang Kantor 1",
+    "location": "Lantai 2",
+    "description": "lorem ipsum",
+    "name_en": "Office Room 1",
+    "location_en": "2nd Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 2", "floor 2"],
+    "command": "12",
+    "image": "/ruangan/kantor1.jpeg"
+  },
+  "ruang_kantor2": {
+    "name": "Ruang Kantor 2",
+    "location": "Lantai 2",
+    "description": "lorem ipsum",
+    "name_en": "Office Room 2",
+    "location_en": "2nd Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 2", "floor 2"],
+    "command": "13",
+    "image": "/ruangan/kantor2.jpeg"
+  },
+  "ruang_3a": {
+    "name": "Ruang 3A",
+    "location": "Lantai 3",
+    "description": "lorem ipsum",
+    "name_en": "Room 3A",
+    "location_en": "3rd Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 3", "floor 3"],
+    "command": "14",
+    "image": "/ruangan/ruang3a.jpeg"
+  },
+  "ruang_3b": {
+    "name": "Ruang 3B",
+    "location": "Lantai 3",
+    "description": "lorem ipsum",
+    "name_en": "Room 3B",
+    "location_en": "3rd Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 3", "floor 3"],
+    "command": "15",
+    "image": "/ruangan/ruang3b.jpeg"
+  },
+  "ruang_kantor3": {
+    "name": "Ruang Kantor 3",
+    "location": "Lantai 3",
+    "description": "lorem ipsum",
+    "name_en": "Office Room 3",
+    "location_en": "3rd Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 3", "floor 3"],
+    "command": "16",
+    "image": "/ruangan/kantor3.jpeg"
+  },
+   "ruang_teknis": {
+    "name": "Ruang Teknis",
+    "location": "Lantai 3",
+    "description": "lorem ipsum",
+    "name_en": "Technic Room ",
+    "location_en": "3rd Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 3", "floor 3"],
+    "command": "17",
+    "image": "/ruangan/ruangteknis.jpeg"
+  },
+  "ruang_4a": {
+    "name": "Ruang 4A",
+    "location": "Lantai 4",
+    "description": "lorem ipsum",
+    "name_en": "Room 4A",
+    "location_en": "4th Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 4", "floor 4"],
+    "command": "18",
+    "image": "/ruangan/ruang4a.jpeg"
+  },
+  "ruang_4b": {
+    "name": "Ruang 4B",
+    "location": "Lantai 4",
+    "description": "lorem ipsum",
+    "name_en": "Room 4B",
+    "location_en": "4th Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 4", "floor 4"],
+    "command": "19",
+    "image": "/ruangan/ruang4b.jpeg"
+  },
+  "ruang_4c": {
+    "name": "Ruang 4C",
+    "location": "Lantai 4",
+    "description": "lorem ipsum",
+    "name_en": "Room 4C",
+    "location_en": "4th Floor",
+    "description_en": "lorem ipsum",
+    "keyword": ["lantai 4", "floor 4"],
+    "command": "20",
+    "image": "/ruangan/ruang4c.jpeg"
   }
+  
 }
