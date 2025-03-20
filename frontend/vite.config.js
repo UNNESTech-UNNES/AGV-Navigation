@@ -16,8 +16,8 @@ export default defineConfig({
       },
       manifest: {
         name: "AGV",
-        short_name: "AGV ",
-        description: "AGV  ",
+        short_name: "AGV",
+        description: "AGV",
         theme_color: "#ffffff",
         background_color: "#ffffff",
         display: "standalone",
@@ -31,6 +31,29 @@ export default defineConfig({
             src: "/pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
+          },
+        ],
+      },
+      includeAssets: [
+        "images/*.png",
+        "images/*.jpg",
+        "images/*.jpeg",
+        "images/*.svg",
+        "pwa-192x192.png",
+        "pwa-512x512.png"
+      ],
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "image-cache",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 30 * 24 * 60 * 60,
+              },
+            },
           },
         ],
       },
