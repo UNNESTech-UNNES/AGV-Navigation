@@ -57,7 +57,7 @@ const ESPSettings = ({ language }) => {
         <Separator className="my-4" />
       </motion.div>
       <div className="w-full max-w-lg rounded-lg p-4 md:p-6 mt-6">
-        <div className="space-y-1">
+        <div className="space-y-3 md:space-y-1">
           <label className="block text-sm font-medium">
             {language === "id" ? "Alamat IP ESP32" : "ESP32 IP Address"}
           </label>

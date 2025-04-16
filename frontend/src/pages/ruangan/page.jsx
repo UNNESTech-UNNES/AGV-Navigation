@@ -82,16 +82,33 @@ const Page = () => {
         body: command.toString(),
       });
 
+      const text = await response.text();
+
       if (response.ok) {
         console.log(`Perintah ${command} dikirim ke ESP32`);
-        // toast.success(`Command ${command} sent to ESP32 successfully.`);
+
+        if (text === "IZIN_LEWAT") {
+          const permisiText =
+            language === "id"
+              ? "Mohon maaf, permisi, saya ingin lewat."
+              : "Excuse me, I need to pass.";
+          speak(permisiText);
+          toast.info("🚶 " + permisiText);
+        } else if (text === "TELAH_SAMPAI") {
+          const sampaiText =
+            language === "id"
+              ? "Kita sudah sampai di tujuan."
+              : "We have arrived at the destination.";
+          speak(sampaiText);
+          toast.success("🎉 " + sampaiText);
+        }
       } else {
         console.error("Gagal mengirim perintah");
-        toast.error("Failed to send command to ESP32.");
+        toast.error("Gagal mengirim perintah ke ESP32.");
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Error sending command to ESP32.");
+      toast.error("Terjadi kesalahan saat mengirim ke ESP32.");
     }
   };
 
