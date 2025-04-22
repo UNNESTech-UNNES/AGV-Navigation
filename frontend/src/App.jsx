@@ -13,6 +13,8 @@ import "@fontsource/manrope";
 import Navbar from "./components/navbar";
 import { Toaster } from "./components/ui/sonner";
 import { useState, useEffect } from "react";
+import CommandControl from "./pages/demo/page";
+import Credit from "./components/kredit";
 
 function App() {
   const [language, setLanguage] = useState(
@@ -45,9 +47,11 @@ function App() {
         <Route path="/tentang" element={<Tentang language={language} />} />
         <Route path="/agv" element={<AGV language={language} />} />
         <Route path="/esp" element={<ESPControl language={language} />} />
+        <Route path="/demo" element={<CommandControl />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster position="bottom-right" richColors />
+      <Credit />
     </Router>
   );
 }
