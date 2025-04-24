@@ -1,5 +1,11 @@
 import React from "react";
-import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  ArrowUp,
+  ArrowDown,
+  ArrowLeft,
+  ArrowRight,
+  StopCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const firebaseURL =
@@ -27,9 +33,11 @@ const CommandControl = () => {
   };
 
   return (
-    <div className="p-6 text-center mt-36">
+    <div className="p-6 text-center mt-16">
       <h2 className="text-xl font-semibold mb-6">Kontrol AGV</h2>
-      <div className="flex justify-center gap-4">
+
+      {/* Susunan tombol dengan + dan Stop */}
+      <div className="flex justify-center gap-8 mb-4">
         <Button
           variant="outline"
           onClick={() => sendCommand(1)}
@@ -38,7 +46,7 @@ const CommandControl = () => {
           <ArrowUp size={24} />
         </Button>
       </div>
-      <div className="flex justify-center gap-4 mt-4">
+      <div className="flex justify-center items-center gap-8 mb-4">
         <Button
           variant="outline"
           onClick={() => sendCommand(3)}
@@ -46,12 +54,13 @@ const CommandControl = () => {
         >
           <ArrowLeft size={24} />
         </Button>
+        {/* Tombol Stop di tengah */}
         <Button
           variant="outline"
-          onClick={() => sendCommand(2)}
-          className="w-16 h-16 rounded-full flex items-center justify-center"
+          onClick={() => sendCommand(5)} // Perintah Stop
+          className="w-16 h-16 rounded-full flex items-center justify-center bg-red-500 text-white hover:bg-red-900 hover:text-white"
         >
-          <ArrowDown size={24} />
+          <StopCircle size={24} />
         </Button>
         <Button
           variant="outline"
@@ -59,6 +68,15 @@ const CommandControl = () => {
           className="w-16 h-16 rounded-full flex items-center justify-center"
         >
           <ArrowRight size={24} />
+        </Button>
+      </div>
+      <div className="flex justify-center gap-8">
+        <Button
+          variant="outline"
+          onClick={() => sendCommand(2)}
+          className="w-16 h-16 rounded-full flex items-center justify-center"
+        >
+          <ArrowDown size={24} />
         </Button>
       </div>
 
@@ -80,6 +98,10 @@ const CommandControl = () => {
           <li className="flex items-center justify-center gap-2">
             <ArrowRight size={20} />
             <span>Kanan / Command 4</span>
+          </li>
+          <li className="flex items-center justify-center gap-2">
+            <StopCircle size={20} />
+            <span>Berhenti / Command 5</span>
           </li>
         </ul>
       </div>
