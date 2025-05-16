@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { MapPin, AlertTriangle, Battery, Wifi, Navigation } from "lucide-react";
 import roomsData from "../../data/data.json"; // Sesuaikan path sesuai struktur folder Anda
-import RoomCard from "@/components/RoomCard";
-import Header from "@/components/header";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("1");
@@ -883,7 +881,7 @@ const Page = () => {
 
   // Render antarmuka pengguna
   return (
-    <div className="container mx-auto p-4 mt-20">
+    <div className="container mx-auto p-4">
       {/* Status Bar */}
       <div className="mb-4 p-2 bg-gray-100 rounded-lg shadow-sm">
         <div className="flex justify-between items-center">
@@ -926,6 +924,7 @@ const Page = () => {
           </div>
         </div>
       </div>
+
       {/* Panel Pengaturan */}
       {showSettings && (
         <div className="mb-4 p-3 bg-white rounded-lg shadow-md">
@@ -955,6 +954,7 @@ const Page = () => {
           </div>
         </div>
       )}
+
       {/* Panel Status AGV */}
       <div className="mb-4 p-3 bg-white rounded-lg shadow-md">
         <h3 className="font-medium mb-2">{texts[language].statusTitle}</h3>
@@ -1051,6 +1051,7 @@ const Page = () => {
           </button>
         </div>
       </div>
+
       {/* Panel Debug */}
       {showDebugPanel && (
         <div className="mb-4 p-3 bg-gray-100 rounded-lg shadow-md">
@@ -1166,6 +1167,7 @@ const Page = () => {
           </div>
         </div>
       )}
+
       {/* Panel Kedatangan */}
       {showArrivalPanel && (
         <div className="mb-4 p-3 bg-blue-50 rounded-lg shadow-md">
@@ -1206,28 +1208,11 @@ const Page = () => {
           </div>
         </div>
       )}
+
       {/* Room List UI */}
-
       <div className="p-3 bg-white rounded-lg shadow-md">
-        <div className=" flex flex-col items-center justify-center text-center px-4">
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-3xl md:text-4xl 2xl:text-6xl font-bold leading-tight "
-          >
-            {texts[language].title}
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="mt-1 text-sm md:text-base 2xl:text-md text-muted-foreground"
-          >
-            {texts[language].description}
-          </motion.p>
-        </div>
+        <h2 className="text-xl font-bold mb-1">{texts[language].title}</h2>
+        <p className="text-gray-600 mb-4">{texts[language].description}</p>
 
         {/* Tampilkan pesan loading */}
         {loading && (
@@ -1242,7 +1227,7 @@ const Page = () => {
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
                   transition={{ duration: 0.5 }}
-                />
+                ></motion.div>
               </div>
               <p className="text-sm text-gray-600 mt-2">
                 {selectedRoom?.description}
@@ -1251,9 +1236,28 @@ const Page = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-3 mt-8">
+        <div className="grid grid-cols-1 gap-3">
           {roomsArray.map((room) => (
-            <RoomCard key={room.id} room={room} onGuide={handleGuide} />
+            <div
+              key={room.id}
+              className="border rounded-lg overflow-hidden hover:shadow-md transition"
+            >
+              <div className="p-3">
+                <h3 className="font-medium">{room.name}</h3>
+                <p className="text-sm text-gray-600">{room.location}</p>
+                <div className="flex justify-between items-center mt-2">
+                  <p className="text-sm text-gray-500 line-clamp-1">
+                    {room.description}
+                  </p>
+                  <button
+                    onClick={() => handleGuide(room)}
+                    className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm"
+                  >
+                    {texts[language].guideMe}
+                  </button>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
