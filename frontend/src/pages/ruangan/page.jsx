@@ -4,6 +4,7 @@ import { MapPin, AlertTriangle, Battery, Wifi, Navigation } from "lucide-react";
 import roomsData from "../../data/data.json"; // Sesuaikan path sesuai struktur folder Anda
 import RoomCard from "@/components/RoomCard";
 import Header from "@/components/header";
+import { Button } from "@/components/ui/button";
 
 const Page = () => {
   const [activeTab, setActiveTab] = useState("1");
@@ -881,10 +882,67 @@ const Page = () => {
     fetchAgvStatus();
   };
 
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+
+  const [isListening, setIsListening] = useState(false);
+  const [voiceText, setVoiceText] = useState("");
+  const [voiceResults, setVoiceResults] = useState([]);
+
+  const startListening = () => {
+    if (!recognition)
+      return alert("Speech recognition tidak didukung browser ini.");
+    setIsListening(true);
+    recognition.lang = language === "id" ? "id-ID" : "en-US";
+    recognition.start();
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.toLowerCase();
+      setVoiceText(transcript);
+
+      const foundRooms = Object.values(roomsData).filter((room) => {
+        const roomName = language === "id" ? room.name : room.name_en;
+        return (
+          transcript.includes(roomName.toLowerCase()) ||
+          (room.keyword && room.keyword.some((kw) => transcript.includes(kw)))
+        );
+      });
+
+      setVoiceResults(foundRooms);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+  };
+
+  useEffect(() => {
+    speak(
+      language === "id"
+        ? "Ruangan apa yang sedang Anda cari?"
+        : "What room are you looking for?"
+    );
+  }, []);
+
+  useEffect(() => {
+    if (voiceText && voiceResults.length > 0) {
+      const count = voiceResults.length;
+      const roomNames = voiceResults
+        .map((room) => (language === "id" ? room.name : room.name_en))
+        .join(", ");
+      const message =
+        language === "id"
+          ? `Ditemukan ${count} ruangan: ${roomNames}`
+          : `Found ${count} room${count > 1 ? "s" : ""}: ${roomNames}`;
+      speak(message);
+    }
+  }, [voiceResults]);
+
   // Render antarmuka pengguna
   return (
     <div className="container mx-auto p-4 mt-20">
-      {/* Status Bar */}
+      {/* Start Debugging Status Bar */}
       <div className="mb-4 p-2 bg-gray-100 rounded-lg shadow-sm">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
@@ -1206,15 +1264,17 @@ const Page = () => {
           </div>
         </div>
       )}
+      {/* Edn Debugging */}
+
       {/* Room List UI */}
 
       <div className="p-3 bg-white rounded-lg shadow-md">
-        <div className=" flex flex-col items-center justify-center text-center px-4">
+        <div className="flex flex-col items-center justify-center text-center px-4">
           <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-3xl md:text-4xl 2xl:text-6xl font-bold leading-tight "
+            className="text-3xl md:text-4xl 2xl:text-6xl font-bold leading-tight"
           >
             {texts[language].title}
           </motion.h1>
@@ -1227,6 +1287,25 @@ const Page = () => {
           >
             {texts[language].description}
           </motion.p>
+        </div>
+
+        {/* Tombol Voice Search */}
+        <div className="flex flex-col items-center my-4">
+          <Button onClick={startListening}>
+            {isListening
+              ? language === "id"
+                ? "Mendengarkan..."
+                : "Listening..."
+              : language === "id"
+              ? "Cari dengan Suara"
+              : "Search by Voice"}
+          </Button>
+
+          {voiceText && (
+            <p className="mt-2 text-sm text-muted-foreground">
+              <strong>Ucapan Anda:</strong> "{voiceText}"
+            </p>
+          )}
         </div>
 
         {/* Tampilkan pesan loading */}
@@ -1251,11 +1330,29 @@ const Page = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-3 mt-8">
-          {roomsArray.map((room) => (
-            <RoomCard key={room.id} room={room} onGuide={handleGuide} />
-          ))}
-        </div>
+        {/* Tampilkan hasil ruangan berdasarkan suara */}
+        {/* Tampilkan semua ruangan atau hasil pencarian suara */}
+        {voiceText ? (
+          voiceResults.length > 0 ? (
+            <div className="grid grid-cols-3 gap-3 mt-8">
+              {voiceResults.map((room) => (
+                <RoomCard key={room.id} room={room} onGuide={handleGuide} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-red-500 mt-4 text-center">
+              {language === "id"
+                ? "Tidak ditemukan ruangan yang cocok dengan ucapan."
+                : "No matching room found based on your speech."}
+            </p>
+          )
+        ) : (
+          <div className="grid grid-cols-3 gap-3 mt-8">
+            {roomsArray.map((room) => (
+              <RoomCard key={room.id} room={room} onGuide={handleGuide} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

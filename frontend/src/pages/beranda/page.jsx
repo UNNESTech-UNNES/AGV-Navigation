@@ -120,7 +120,7 @@ const Home = () => {
               transition={{ duration: 0.6, delay: 0.6 }}
               className="mt-4 flex gap-4"
             >
-              <Link to="/cari-ruangan">
+              <Link to="/daftar-ruangan">
                 <Button size="lg">{t.find_room}</Button>
               </Link>
               <Link to="/denah">
