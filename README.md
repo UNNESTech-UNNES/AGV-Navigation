@@ -21,7 +21,7 @@ Proyek ini memanfaatkan **Vite**, **Tailwind CSS**, **Shadcn**, dan di-deploy me
 git clone https://github.com/UNNESTech-UNNES/AGV-Navigation.git
 
 # 2. Masuk ke folder frontend
-cd AGV-Navigation/frontend
+cd frontend
 
 # 3. Install dependency
 npm install
@@ -29,5 +29,5 @@ npm install
 # 4. Jalankan aplikasi
 npm run dev
 
-#5. Akses Pada browser
-http://localhost:5173
+# 5. Akses Pada browser
+pada port localhost:5173
